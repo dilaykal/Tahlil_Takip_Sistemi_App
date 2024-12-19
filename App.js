@@ -9,7 +9,7 @@ import RegisterScreen from './screens/RegisterScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
-  return (
+  return ( 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
