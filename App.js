@@ -13,7 +13,7 @@ import {
 const Stack = createStackNavigator();
 
 export default function App() {
-  return (
+  return ( 
     <NavigationContainer>
       <Stack.Navigator 
         initialRouteName="Home"
