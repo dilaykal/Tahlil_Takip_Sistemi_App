@@ -164,5 +164,4 @@ const RegisterScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default RegisterScreen;
