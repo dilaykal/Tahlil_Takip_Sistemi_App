@@ -1,4 +1,4 @@
-// knexfile.js
+// knexfile.js oluşumun
 module.exports = {
     client: 'pg',
     connection: {
