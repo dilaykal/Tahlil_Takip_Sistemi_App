@@ -65,10 +65,32 @@ const RegisterScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (validateForm()) {
       // API çağrısı burada yapılacak
       console.log('Kayıt yapılıyor:', formData);
+
+      try {
+        const response = await fetch('https://your-api-url.com/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          console.log('Kayıt başarılı');
+          // Kayıt sonrası işlem (örneğin, yönlendirme)
+          navigation.navigate('Login');
+        } else {
+          console.error('Kayıt başarısız', data.message);
+        }
+      } catch (error) {
+        console.error('Kayıt işlemi sırasında hata oluştu', error);
+      }
     }
   };
 
@@ -158,10 +180,25 @@ const RegisterScreen = ({ navigation }) => {
       />
       {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
+      {/* Cinsiyetin Ekranda Görünmesi */}
+      <Text style={styles.label}>Cinsiyet: {formData.gender ? (formData.gender === 'female' ? 'Kadın' : 'Erkek') : ''}</Text>
+
+      <DropDownPicker
+        open={dropdownOpen}
+        value={formData.gender}
+        items={genderItems}
+        setOpen={setDropdownOpen}
+        setValue={(value) => updateFormData('gender', value)}
+        setItems={setGenderItems}
+        placeholder="Cinsiyet"
+      />
+      {errors.gender && <Text style={styles.errorText}>{errors.gender}</Text>}
+
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Kayıt Ol</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 export default RegisterScreen;
