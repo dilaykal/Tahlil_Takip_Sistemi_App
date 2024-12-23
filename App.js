@@ -2,6 +2,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import AdminDashboard from './screens/AdminDashboard'; // AdminDashboard dosyanızın doğru yolu
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   HomeScreen,
   LoginScreen,
