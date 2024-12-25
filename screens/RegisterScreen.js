@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { styles } from '../styles/globalStyles';
 
@@ -21,7 +20,6 @@ const RegisterScreen = ({ navigation }) => {
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genderItems] = useState([
     { label: 'Kadın', value: 'female' },
@@ -30,7 +28,7 @@ const RegisterScreen = ({ navigation }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.fullName) {
       newErrors.fullName = 'Ad Soyad zorunludur';
     }
@@ -51,7 +49,7 @@ const RegisterScreen = ({ navigation }) => {
 
     if (!formData.birthDate) {
       newErrors.birthDate = 'Doğum tarihi zorunludur';
-    } else if (!/^\d{2}\.\d{2}\.\d{4}$/.test(formData.birthDate)) {
+    } else if (!/^‌\d{2}\.\d{2}\.\d{4}$/.test(formData.birthDate)) {
       newErrors.birthDate = 'Doğum tarihi GG.AA.YYYY formatında olmalıdır';
     }
 
@@ -65,32 +63,11 @@ const RegisterScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     if (validateForm()) {
-      // API çağrısı burada yapılacak
       console.log('Kayıt yapılıyor:', formData);
-
-      try {
-        const response = await fetch('https://your-api-url.com/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          console.log('Kayıt başarılı');
-          // Kayıt sonrası işlem (örneğin, yönlendirme)
-          navigation.navigate('Login');
-        } else {
-          console.error('Kayıt başarısız', data.message);
-        }
-      } catch (error) {
-        console.error('Kayıt işlemi sırasında hata oluştu', error);
-      }
+      // Kayıt sonrası işlem (örneğin, yönlendirme)
+      navigation.navigate('Login');
     }
   };
 
@@ -148,20 +125,6 @@ const RegisterScreen = ({ navigation }) => {
       />
       {errors.birthDate && <Text style={styles.errorText}>{errors.birthDate}</Text>}
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={formData.birthDate}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            setShowDatePicker(false);
-            if (selectedDate) {
-              updateFormData('birthDate', selectedDate);
-            }
-          }}
-        />
-      )}
-
       <TextInput
         style={[styles.input, errors.phone && styles.inputError]}
         placeholder="Telefon"
@@ -180,8 +143,7 @@ const RegisterScreen = ({ navigation }) => {
       />
       {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
-      {/* Cinsiyetin Ekranda Görünmesi */}
-      <Text style={styles.label}>Cinsiyet: {formData.gender ? (formData.gender === 'female' ? 'Kadın' : 'Erkek') : ''}</Text>
+      <Text style={styles.label}>Cinsiyet:</Text>
 
       <DropDownPicker
         open={dropdownOpen}
@@ -189,7 +151,6 @@ const RegisterScreen = ({ navigation }) => {
         items={genderItems}
         setOpen={setDropdownOpen}
         setValue={(value) => updateFormData('gender', value)}
-        setItems={setGenderItems}
         placeholder="Cinsiyet"
       />
       {errors.gender && <Text style={styles.errorText}>{errors.gender}</Text>}
