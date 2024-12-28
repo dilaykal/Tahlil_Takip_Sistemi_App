@@ -25,7 +25,7 @@ const LoginScreen= ({navigation}) =>{
       <Text style={styles.welcome}>Welcome</Text>
 
       <CustomTextInput
-        title="Tc No"
+        title="TC Kimlik Numarası"
         isSecureText={false}
         handleOnChangeText={setTc}
         handleValue={tc}

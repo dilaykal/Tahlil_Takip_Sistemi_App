@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View , TextInput} from "react-native";
 import React from "react";
 
-const CustomTextInput = ({title,isSecureText,handleOnChangeText,handleValue,handlePlaceholder}) =>{
+
+const CustomTextInput = ({title,isSecureText,handleOnChangeText,handleValue,handlePlaceholder }) =>{
     return(
         <View style={styles.inputContainer}>
             <Text style={styles.inputBoxText} >{title}</Text>
@@ -9,8 +10,14 @@ const CustomTextInput = ({title,isSecureText,handleOnChangeText,handleValue,hand
                 placeholder={handlePlaceholder} 
                 secureTextEntry={isSecureText}
                 style={styles.textInputStyle} 
-                keyboardType='numeric' 
-                onChangeText={(text) => handleOnChangeText(text)}
+                keyboardType={
+                    title === "E-posta" 
+                      ? 'email-address' 
+                      : title === "Telefon" 
+                        ? 'phone-pad' 
+                        : 'numeric'
+                  }
+                onChangeText={handleOnChangeText}
                 value={handleValue}
             />
         </View>

@@ -14,76 +14,138 @@ import { CustomTextInput, CustomButton } from "../component";
 
 const RegisterScreen= () =>{
   const [name, setName] = useState("")
-  const [tc, setTc] = useState({})
+  const [tc, setTc] = useState("")
   const [email, setEmail] = useState("")
   const [gender, setGender] = useState("")
   const [birthDate, setBirthDate] = useState("")
-  const [telNo, setTelNo] = useState({})
+  const [telNo, setTelNo] = useState("")
   const [password, setPassword] = useState("")
+  const [emailError, setEmailError] = useState("");
+
+
+  const handleTcChange = (text) => {
+    // Sadece rakam girilmesini sağla
+    const numericValue = text.replace(/[^0-9]/g, '');
+    
+    // 11 karakterden fazla girilmesini engelle
+    if (numericValue.length <= 11) {
+      setTc(numericValue);
+      
+      // Hata mesajı kontrolü
+      if (numericValue.length === 11) {
+        setTcError("");
+      } else if (numericValue.length > 0) {
+        setTcError("TC Kimlik No 11 haneli olmalıdır");
+      } else {
+        setTcError("");
+      }
+    }
+  };
+  const handlePhoneChange = (text) => {
+    // Sadece sayıları al
+    let numbers = text.replace(/\D/g, '');
+    
+    // 10 karakterden fazla olmasını engelle
+    numbers = numbers.substring(0, 10);
+    
+    // Format uygula
+    let formatted = '';
+    if (numbers.length > 0) {
+      formatted = `(${numbers.substring(0, 3)}`;
+      if (numbers.length > 3) {
+        formatted += `) ${numbers.substring(3, 6)}`;
+        if (numbers.length > 6) {
+          formatted += ` ${numbers.substring(6, 8)}`;
+          if (numbers.length > 8) {
+            formatted += ` ${numbers.substring(8)}`;
+          }
+        }
+      }
+    }
+    
+    setTelNo(formatted);
+  };
+  // Email kontrolü için fonksiyon
+  const handleEmailChange = (text) => {
+    setEmail(text);
+    // Email formatı kontrolü
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (text.length > 0 && !emailRegex.test(text)) {
+      setEmailError('Geçerli bir email adresi giriniz');
+    } else {
+      setEmailError('');
+    }
+  };
+    
 
   return(
     <SafeAreaView style={styles.container}>
       <View style={styles.title}>
         <Image style={styles.image} source={require('../assets/images/signup.png')}/>
-        <Text style={styles.register}>Register Page</Text>
+        <Text style={styles.register}></Text>
       </View>
 
       <View style= {styles.textInputContainer}>
         <CustomTextInput
-          title="name"
+          title="İsim Soyisim"
           isSecureText={false}
           handleOnChangeText={setName}
           handleValue={name}
-          handlePlaceholder="İsminizi giriniz"
+          handlePlaceholder=""
         />
 
         <CustomTextInput
-          title="Tc No"
+          title="TC Kimlik Numarası"
           isSecureText={false}
-          handleOnChangeText={setTc}
+          handleOnChangeText={handleTcChange}
           handleValue={tc}
-          handlePlaceholder="Tc no giriniz"
+          handlePlaceholder=""
         />
 
+       
         <CustomTextInput
-          title="email"
+          title="E-posta"
           isSecureText={false}
-          handleOnChangeText={setEmail}
+          handleOnChangeText={handleEmailChange}
           handleValue={email}
-          handlePlaceholder="E posta adresi giriniz"
+          handlePlaceholder="ornek@email.com"
         />
+        {emailError ? (
+          <Text style={styles.errorText}>{emailError}</Text>
+        ) : null}
 
         <CustomTextInput
-          title="gender"
+          title="Cinsiyet"
           isSecureText={false}
           handleOnChangeText={setGender}
           handleValue={gender}
-          handlePlaceholder="Cinsiyet giriniz"
+          handlePlaceholder=""
         />
-
+                
         <CustomTextInput
-          title="birthDate"
+          title="Doğum Tarihi"
           isSecureText={false}
           handleOnChangeText={setBirthDate}
           handleValue={birthDate}
-          handlePlaceholder="Doğum tarihinizi giriniz"
+          handlePlaceholder="GG/AA/YYYY"
         />
 
         <CustomTextInput
-          title="Tel no"
+          title="Telefon Numarası"
           isSecureText={false}
-          handleOnChangeText={setTelNo}
+          handleOnChangeText={handlePhoneChange}
           handleValue={telNo}
-          handlePlaceholder="Telefon no giriniz"
+          handlePlaceholder="(5XX) XXX XX XX"
         />
-
+        
         <CustomTextInput
-          title="password"
+          title="Şifre"
           isSecureText={true}
           handleOnChangeText={setPassword}
           handleValue={password}
-          handlePlaceholder="Şifre oluşturunuz"
+          handlePlaceholder=""
         />
+
       </View>
 
       <View style={styles.backLogin}>
@@ -102,9 +164,6 @@ const RegisterScreen= () =>{
       </View>
 
     </SafeAreaView>
- 
-      
-
   )
 
 }
@@ -129,23 +188,29 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   textInputContainer:{
-    flex:4,
+    flex:5,
     width:'100%',
     alignItems:'center',
-    paddingVertical:20,
+    paddingVertical:5,
     alignItems:'center',
-    justifyContent:'space-between'
+    justifyContent:'space-evenly'
   },
-  
   backLogin:{
     flex:1,
     width:'100%',
     alignItems:'center'
   },
   image:{
-    width:120,
-    height:120,
-    marginBottom:20
+    width:110,
+    height:110,
+    marginBottom:0
+  },
+  errorText: {
+    color: 'white',
+    fontSize: 12,
+    alignSelf: 'flex-start',
+    marginLeft: '10%',
+    marginTop: -5
   }
 })
 
