@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 // import { StatusBar } from 'react-native';
 import { View, Text,StyleSheet, TextInput, Pressable } from 'react-native';
 import { CustomTextInput, CustomButton } from '../component';
+import { login } from '../redux/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTc, setPassword,setLogin } from '../redux/userSlice';
+import {setLogin } from '../redux/userSlice';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
 // import RootNavigation from './navigation/rootNavigation';
@@ -18,8 +19,12 @@ import { setTc, setPassword,setLogin } from '../redux/userSlice';
 // } from './screens';
 
 const LoginScreen= ({navigation}) =>{
+
+  const[email, setEmail] = useState('')
+  const[password, setPassword] = useState('')
+
   //userSlice içerisindeki verilerin okunması
-  const {tc,password} = useSelector(state=> state.user)
+  //const {} = useSelector(state=> state.user)
   //userSlice içerisindeki reducer yapılarını kullanma veya veri gönderme 
   const dispatch = useDispatch()
 
@@ -29,18 +34,18 @@ const LoginScreen= ({navigation}) =>{
       <Text style={styles.welcome}>Welcome</Text>
 
       <CustomTextInput
-        title="TC Kimlik Numarası"
+        title="E-posta"
         isSecureText={false}
-        handleOnChangeText={(text)=>dispatch(setTc(text))}
-        handleValue={tc}
-        handlePlaceholder='Tc No Giriniz'
+        handleOnChangeText={(text)=>setEmail(text)}
+        handleValue={email}
+        handlePlaceholder='E Posta adresinizi Giriniz'
 
       />
       
       <CustomTextInput
         title="Şifre"
         isSecureText={true}
-        handleOnChangeText={(password)=>dispatch(setPassword(password))}
+        handleOnChangeText={(password)=>setPassword(password)}
         handleValue={password}
         handlePlaceholder='Şifre Giriniz'
 
@@ -49,7 +54,7 @@ const LoginScreen= ({navigation}) =>{
       <CustomButton
         buttonText='Giriş Yap'
         setWidth='80%'
-        handleOnPress={()=>dispatch(setLogin())}
+        handleOnPress={()=>dispatch(login({email, password}))}
         buttonColor="blue"
         pressedButtonColor="gray"
       />
