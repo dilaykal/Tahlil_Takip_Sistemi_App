@@ -9,8 +9,8 @@ import {setLogin } from '../redux/userSlice';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
 // import RootNavigation from './navigation/rootNavigation';
-// import { db } from './firebaseConfig';
-// import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+ import { collection, getDocs } from 'firebase/firestore';
 // import { 
 //  HomeScreen,
 //  RegisterScreen,
