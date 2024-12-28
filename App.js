@@ -16,9 +16,15 @@
 
 import React from 'react';
 import RootNavigation from './navigation/rootNavigation';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 const App = () =>{
-  return (<RootNavigation/>);
+  return (
+    <Provider store={store}>
+      <RootNavigation/>
+    </Provider>
+);
 
 };
 

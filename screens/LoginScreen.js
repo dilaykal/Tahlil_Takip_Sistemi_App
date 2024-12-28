@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 // import { StatusBar } from 'react-native';
 import { View, Text,StyleSheet, TextInput, Pressable } from 'react-native';
 import { CustomTextInput, CustomButton } from '../component';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTc, setPassword,setLogin } from '../redux/userSlice';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
 // import RootNavigation from './navigation/rootNavigation';
@@ -16,8 +18,10 @@ import { CustomTextInput, CustomButton } from '../component';
 // } from './screens';
 
 const LoginScreen= ({navigation}) =>{
-  const [tc, setTc] = useState("");
-  const {password, setPassword} = useState("");
+  //userSlice içerisindeki verilerin okunması
+  const {tc,password} = useSelector(state=> state.user)
+  //userSlice içerisindeki reducer yapılarını kullanma veya veri gönderme 
+  const dispatch = useDispatch()
 
 
   return (
@@ -27,7 +31,7 @@ const LoginScreen= ({navigation}) =>{
       <CustomTextInput
         title="TC Kimlik Numarası"
         isSecureText={false}
-        handleOnChangeText={setTc}
+        handleOnChangeText={(text)=>dispatch(setTc(text))}
         handleValue={tc}
         handlePlaceholder='Tc No Giriniz'
 
@@ -36,7 +40,7 @@ const LoginScreen= ({navigation}) =>{
       <CustomTextInput
         title="Şifre"
         isSecureText={true}
-        handleOnChangeText={setPassword}
+        handleOnChangeText={(password)=>dispatch(setPassword(password))}
         handleValue={password}
         handlePlaceholder='Şifre Giriniz'
 
@@ -45,7 +49,7 @@ const LoginScreen= ({navigation}) =>{
       <CustomButton
         buttonText='Giriş Yap'
         setWidth='80%'
-        handleOnPress={()=>navigation.navigate('Home')}
+        handleOnPress={()=>dispatch(setLogin())}
         buttonColor="blue"
         pressedButtonColor="gray"
       />
