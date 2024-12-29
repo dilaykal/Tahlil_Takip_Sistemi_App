@@ -1,31 +1,81 @@
 // screens/HomeScreen.js
-import React from 'react';
+import React,{useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { collection, addDoc }  from 'firebase/firestore';
+import { collection, addDoc, getDocs }  from 'firebase/firestore';
 import {db} from '../firebaseConfig';
 import CustomButton from '../component/CustomButton';
 
 const HomeScreen = () =>{
+  const [data, setData]=useState([])
+ 
+  //SEND DATA TO FIREBASE
   const sendData = async()=>{
       try{
         const docRef=await addDoc(collection(db,"TahlilTakipSistemi"),{
           title:"Tahlil Sonuc Takip Sistemi",
-          content:"Tahlil sonuclari görüntüleme",
+          content:"Tahlil sonuclari görüntüleme"
       });
       console.log("Document written with ID: ", docRef.id);
     }catch (e){
       console.error("Error adding document: ",e);
     }
   };
+
+  //GET DATA FROM FIREBASE
+  // const getData=async()=>{
+  //   const querySnapshot = await getDocs(collection(db,"TahlilTakipSistemi"));
+  //     querySnapshot.forEach((doc)=>{
+  //       //console.log('${doc.id}=> ${doc.data()}');
+  //       setData([...data, doc.data()]) //daha önceki veriler dursun hepsini yazdrısın
+  //   });
+  // }
+
+  // Verileri Firestore'dan çek
+  const getData = async () => {
+    try {
+      const tahlilData = [];
+      const querySnapshot = await getDocs(collection(db, "TahlilTakipSistemi"));
+      querySnapshot.forEach((doc) => {
+        tahlilData.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      setData(tahlilData);
+    } catch (error) {
+      console.error("Veri çekme hatası:", error);
+    }
+  };
+
+
     return(
       <View style={styles.container}>
-        <Text>HomePage</Text>
+        <Text style={styles.headerText}>Tahlil Takip Sistemi</Text>
+
+        {/* Veriler varsa göster */}
+        {data && data.length > 0 ? (
+          data.map((item, index) => (
+            <View key={index} style={styles.dataItem}>
+              <Text style={styles.titleText}>{item?.title || 'Başlık yok'}</Text>
+              <Text style={styles.contentText}>{item?.content || 'İçerik yok'}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noDataText}>Henüz veri bulunmamaktadır</Text>
+        )}
         <CustomButton
           buttonText={"Save"}
           setWidth={"40%"}
           buttonColor={'blue'}
           pressedButtonColor={'gray'}
           handleOnPress={sendData}
+        />
+        <CustomButton
+          buttonText={"Get Data"}
+          setWidth={"40%"}
+          buttonColor={'blue'}
+          pressedButtonColor={'gray'}
+          handleOnPress={getData}
         />
       </View>
     );
