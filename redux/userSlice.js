@@ -2,13 +2,9 @@ import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 
 export const login = createAsyncThunk('user/login',async({email, password})=>{
+    console.log("mail: ", email)
+    console.log("password: ",password)
     try {
-        // Email formatını kontrol et
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error('Geçersiz e-posta adresi');
-        }
-
         const auth = getAuth();
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -19,19 +15,8 @@ export const login = createAsyncThunk('user/login',async({email, password})=>{
         }
         return userData;
     } catch (error) {
-        if (error.message === 'Geçersiz e-posta adresi') {
-            throw error;
-        }
-        // Firebase'den gelen hataları Türkçeleştir
-        if (error.code === 'auth/invalid-email') {
-            throw new Error('Geçersiz e-posta adresi');
-        } else if (error.code === 'auth/user-not-found') {
-            throw new Error('Kullanıcı bulunamadı');
-        } else if (error.code === 'auth/wrong-password') {
-            throw new Error('Hatalı şifre');
-        } else {
-            throw new Error('Giriş yapılırken bir hata oluştu');
-        }
+        console.log("userSlice 21 line ", error)
+        throw error
     }
 });
 
@@ -52,20 +37,24 @@ export const userSlice=createSlice({
         setPassword:(state, action)=>{
             state.password = action.payload
         }
-
+        
     },
     extraReducers:(builder)=>{
         builder 
             .addCase(login.pending,(state)=>{
                 state.isAuth=false
+                state.error = null;
             }) //yükleniyor cevap bekleniyor
             .addCase(login.fulfilled, (state, action)=>{
-                state.isAuth=true;
-                state.user = action.payload.user;
-                state.token= action.payload.token;
+                if (action.payload) {
+                    state.isAuth = true;
+                    state.user = action.payload.user;
+                    state.token = action.payload.token;
+                    state.error = null;
+                }
             }) //başarılı sonuçlandığında
             .addCase(login.rejected, (state, action)=>{
-                state.isAuth=false;
+                state.isAuth = false;
                 state.error = action.error.message;
             }) //hata mesajı geldi login işlemi olmadı
     }

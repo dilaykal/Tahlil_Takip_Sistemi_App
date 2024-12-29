@@ -1,22 +1,43 @@
 // screens/HomeScreen.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-// import { collection, addDoc }  from 'firebase/firestore';
-// import {db} from '../firebaseConfig';
+import { collection, addDoc }  from 'firebase/firestore';
+import {db} from '../firebaseConfig';
+import CustomButton from '../component/CustomButton';
 
 const HomeScreen = () =>{
-  return(
-    <View style={styles.container}>
-      <Text>HomePage</Text>
-    </View>
-  )
-}
+  const sendData = async()=>{
+      try{
+        const docRef=await addDoc(collection(db,"TahlilTakipSistemi"),{
+          title:"Tahlil Sonuc Takip Sistemi",
+          content:"Tahlil sonuclari görüntüleme",
+      });
+      console.log("Document written with ID: ", docRef.id);
+    }catch (e){
+      console.error("Error adding document: ",e);
+    }
+  };
+    return(
+      <View style={styles.container}>
+        <Text>HomePage</Text>
+        <CustomButton
+          buttonText={"Save"}
+          setWidth={"40%"}
+          buttonColor={'blue'}
+          pressedButtonColor={'gray'}
+          handleOnPress={sendData}
+        />
+      </View>
+    );
+
+};
 export default HomeScreen
 const styles = StyleSheet.create({
   container:{
     flex:1,
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    backgroundColor:'tomato'
   }
 })
 

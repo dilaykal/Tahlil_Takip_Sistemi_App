@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
 // Import the functions you need from the SDKs you need
-import {getAuth} from 'firebase/auth';
+import {getAuth, initializeAuth, browserLocalPersistence, browserPopupRedirectResolver} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-//import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 //import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -19,22 +19,39 @@ const firebaseConfig = {
   measurementId: "G-TNB0KXVJV3"
 };
 
-// Initialize Firebase
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Auth'u başlat
-const auth = getAuth(app);
-// const auth= initializeAuth(app, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-// });
+// Auth'u özel ayarlarla başlat
+const auth = getAuth(app, {
+  persistence: browserLocalPersistence,
+  popupRedirectResolver: browserPopupRedirectResolver
+});
+
+// Auth durumunu izle
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log('Kullanıcı oturum açtı:', user.email);
+  } else {
+    console.log('Kullanıcı oturum açık değil');
+  }
+});
+
+
+
+//const auth = getAuth(app);
+export const db = getFirestore(app);
 export { auth };
 export default app;
 
 //const analytics = getAnalytics(app);
 
-//export const db = getFirestore(app);
 
 
+// const auth= initializeAuth(app, {
+//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+// });
 
 
 
