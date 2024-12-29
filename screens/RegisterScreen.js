@@ -1,18 +1,13 @@
 // RegisterScreen.js
-// import {
-  //   View,
-  //   Text,
-  //   TextInput,
-  //   TouchableOpacity,
-  // } from 'react-native';
-  // import DropDownPicker from 'react-native-dropdown-picker';
-  // import { styles } from '../styles/globalStyles';
   
 import { StyleSheet, Text, View, SafeAreaView ,Image, Pressable} from "react-native";
 import React, { useState } from 'react';
 import { CustomTextInput, CustomButton } from "../component";
+import { collection, addDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { db, auth } from '../firebaseConfig';
 
-const RegisterScreen= () =>{
+const RegisterScreen= ({ navigation }) =>{
   const [name, setName] = useState("")
   const [tc, setTc] = useState("")
   const [email, setEmail] = useState("")
@@ -21,7 +16,9 @@ const RegisterScreen= () =>{
   const [telNo, setTelNo] = useState("")
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState("");
+  const [tcError, setTcError] = useState("");
 
+  const [error, setError] = useState("");
 
   const handleTcChange = (text) => {
     // Sadece rakam girilmesini sağla
@@ -76,7 +73,54 @@ const RegisterScreen= () =>{
       setEmailError('');
     }
   };
-    
+   // Firebase'e kayıt fonksiyonu
+   const handleRegister = async () => {
+    try {
+      // Validasyonlar
+      if (!name || !tc || !email || !password || !gender || !birthDate || !telNo) {
+        setError('Tüm alanları doldurunuz');
+        return;
+      }
+      if (tc.length !== 11) {
+        setError('TC Kimlik No 11 haneli olmalıdır');
+        return;
+      }
+      if (emailError) {
+        setError('Geçerli bir email adresi giriniz');
+        return;
+      }
+
+      // Firebase Authentication'da kullanıcı oluştur
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Firestore'a kullanıcı bilgilerini kaydet
+      await addDoc(collection(db, "users"), {
+        userId: userCredential.user.uid,
+        name: name,
+        tcNo: tc,
+        email: email,
+        gender: gender,
+        birthDate: birthDate,
+        phoneNumber: telNo,
+        createdAt: new Date()
+      });
+
+      // Başarılı kayıt sonrası Login sayfasına yönlendir
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Kayıt hatası:', error);
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setError('Bu email adresi zaten kullanımda');
+          break;
+        case 'auth/weak-password':
+          setError('Şifre en az 6 karakter olmalıdır');
+          break;
+        default:
+          setError('Kayıt sırasında bir hata oluştu');
+      }
+    }
+  }; 
 
   return(
     <SafeAreaView style={styles.container}>
@@ -152,7 +196,7 @@ const RegisterScreen= () =>{
         <CustomButton
           buttonText="Kayıt Ol"
           setWidth="80%"
-          handleOnPress={()=>console.log(name," ", tc, " ", password, " ")}
+          handleOnPress={handleRegister}
           buttonColor="blue"
           pressedButtonColor="gray"
         
