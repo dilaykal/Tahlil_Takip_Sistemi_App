@@ -2,10 +2,12 @@
 import React,{useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { collection, addDoc, getDocs,deleteDoc,doc,updateDoc }  from 'firebase/firestore';
-import {db} from '../firebaseConfig';
+import {db,auth} from '../firebaseConfig';
 import CustomButton from '../component/CustomButton';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () =>{
+  const navigation = useNavigation();
   const [data, setData]=useState([])
  
   //SEND DATA TO FIREBASE
@@ -98,6 +100,22 @@ const HomeScreen = () =>{
           pressedButtonColor={'gray'}
           handleOnPress={updateData}
         />
+        <CustomButton
+          buttonText="Profil"
+          setWidth="40%"
+          buttonColor="blue"
+          pressedButtonColor="gray"
+          handleOnPress={() => {
+            const user = auth.currentUser;
+            if (user) {
+              navigation.navigate('Profile');
+            } else {
+              console.log("Kullanıcı oturum açmamış");
+              navigation.navigate('Login');
+            }
+          }}
+        />
+
       </View>
     );
 
