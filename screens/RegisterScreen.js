@@ -1,4 +1,4 @@
-// RegisterScreen.js
+// RegisterScreen.js güncellendi.
   
 import { StyleSheet, Text, View, SafeAreaView ,Image, Pressable} from "react-native";
 import React, { useState } from 'react';
