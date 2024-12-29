@@ -1,7 +1,7 @@
 // screens/HomeScreen.js
 import React,{useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { collection, addDoc, getDocs,deleteDoc,doc }  from 'firebase/firestore';
+import { collection, addDoc, getDocs,deleteDoc,doc,updateDoc }  from 'firebase/firestore';
 import {db} from '../firebaseConfig';
 import CustomButton from '../component/CustomButton';
 
@@ -38,9 +38,21 @@ const HomeScreen = () =>{
     }
   };
 
-  //DELETE DATA FROM DATABASE
+  //DELETE DATA FROM FIREBASE
   const deleteData = async() =>{
     await deleteDoc(doc(db, "TahlilTakipSistemi","kFQkmvoloVkzw70WsWGo"));
+  }
+
+  //UPDATE DATA FROM FIREBASE
+  const updateData=async()=>{
+    try{
+      const contentData=doc(db,"TahlilTakipSistemi","QC1vfbCkRgSf1yPHFqH9");
+      await updateDoc(contentData,{
+        content: "degişti"
+      });
+    }catch (error){
+      console.log(error)
+    }
   }
 
     return(
@@ -78,6 +90,13 @@ const HomeScreen = () =>{
           buttonColor={'blue'}
           pressedButtonColor={'gray'}
           handleOnPress={deleteData}
+        />
+        <CustomButton
+          buttonText={"Update Data"}
+          setWidth={"40%"}
+          buttonColor={'blue'}
+          pressedButtonColor={'gray'}
+          handleOnPress={updateData}
         />
       </View>
     );
