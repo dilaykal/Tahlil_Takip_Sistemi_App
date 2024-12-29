@@ -1,7 +1,7 @@
 // screens/HomeScreen.js
 import React,{useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { collection, addDoc, getDocs }  from 'firebase/firestore';
+import { collection, addDoc, getDocs,deleteDoc,doc }  from 'firebase/firestore';
 import {db} from '../firebaseConfig';
 import CustomButton from '../component/CustomButton';
 
@@ -22,15 +22,6 @@ const HomeScreen = () =>{
   };
 
   //GET DATA FROM FIREBASE
-  // const getData=async()=>{
-  //   const querySnapshot = await getDocs(collection(db,"TahlilTakipSistemi"));
-  //     querySnapshot.forEach((doc)=>{
-  //       //console.log('${doc.id}=> ${doc.data()}');
-  //       setData([...data, doc.data()]) //daha önceki veriler dursun hepsini yazdrısın
-  //   });
-  // }
-
-  // Verileri Firestore'dan çek
   const getData = async () => {
     try {
       const tahlilData = [];
@@ -47,6 +38,10 @@ const HomeScreen = () =>{
     }
   };
 
+  //DELETE DATA FROM DATABASE
+  const deleteData = async() =>{
+    await deleteDoc(doc(db, "TahlilTakipSistemi","kFQkmvoloVkzw70WsWGo"));
+  }
 
     return(
       <View style={styles.container}>
@@ -76,6 +71,13 @@ const HomeScreen = () =>{
           buttonColor={'blue'}
           pressedButtonColor={'gray'}
           handleOnPress={getData}
+        />
+        <CustomButton
+          buttonText={"Delete Data"}
+          setWidth={"40%"}
+          buttonColor={'blue'}
+          pressedButtonColor={'gray'}
+          handleOnPress={deleteData}
         />
       </View>
     );
