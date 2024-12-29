@@ -1,22 +1,63 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
-
+import { 
+    collection, 
+    query, 
+    where, 
+    getDocs 
+} from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 export const login = createAsyncThunk('user/login',async({email, password})=>{
     console.log("mail: ", email)
     console.log("password: ",password)
     try {
-        const auth = getAuth();
+        // Firebase Authentication kontrolü
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        const token = user.stsTokenManager.accessToken;
-        const userData = {
-            token,
-            user: user,
+        
+        // Kullanıcının doctors koleksiyonunda olup olmadığını kontrol et
+        const doctorsRef = collection(db, "doctors");
+        const doctorQuery = query(doctorsRef, where("email", "==", email));
+        const doctorSnapshot = await getDocs(doctorQuery);
+
+        if (!doctorSnapshot.empty) {
+            throw new Error('Bu hesap bir doktor hesabıdır. Lütfen doktor girişini kullanın.');
         }
-        return userData;
+
+        // Normal kullanıcı kontrolü
+        const usersRef = collection(db, "users");
+        const userQuery = query(usersRef, where("email", "==", email));
+        const userSnapshot = await getDocs(userQuery);
+
+        if (userSnapshot.empty) {
+            throw new Error('Kullanıcı bulunamadı');
+        }
+
+        const userData = userSnapshot.docs[0].data();
+        return {
+            token: userCredential.user.accessToken,
+            user: {
+                ...userData,
+                uid: userCredential.user.uid
+            }
+        };
+
     } catch (error) {
-        console.log("userSlice 21 line ", error)
-        throw error
+        console.log("userSlice 21 line: ", error);
+        if (error.message.includes('doktor hesabıdır')) {
+            throw error;
+        }
+        switch (error.code) {
+            case 'auth/invalid-credential':
+                throw new Error('Geçersiz e-posta veya şifre');
+            case 'auth/user-not-found':
+                throw new Error('Kullanıcı bulunamadı');
+            case 'auth/wrong-password':
+                throw new Error('Hatalı şifre');
+            case 'auth/invalid-email':
+                throw new Error('Geçersiz e-posta formatı');
+            default:
+                throw new Error('Giriş yapılırken bir hata oluştu');
+        }
     }
 });
 

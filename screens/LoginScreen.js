@@ -84,6 +84,15 @@ const styles = StyleSheet.create({
     fontSize:30,
     marginBottom:30,
     color:'white'
-  }
+  },
+  errorText: {
+    color: 'white',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    textAlign: 'center',
+    width: '80%'
+},
 
 });

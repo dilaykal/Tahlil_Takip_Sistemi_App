@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';  // Direkt dosyadan import
 import ProfilePage from '../screens/ProfilePage';  // Direkt dosyadan import
+import AdminDashboard from '../screens/AdminDashboard';
 
 
 const Stack =createStackNavigator();
@@ -30,6 +31,15 @@ const UserStack = () => {
               headerTintColor: '#fff',
             }}
           />
+          <Stack.Screen 
+            name="AdminDashboard" 
+            component={AdminDashboard}
+            options={{ 
+              title: 'Doktor Paneli',
+              headerLeft: null 
+            }}
+          />
+          
         </Stack.Navigator>
       );
 }

@@ -102,6 +102,7 @@ const RegisterScreen= ({ navigation }) =>{
         gender: gender,
         birthDate: birthDate,
         phoneNumber: telNo,
+        userType: 'patient', 
         createdAt: new Date()
       });
 
