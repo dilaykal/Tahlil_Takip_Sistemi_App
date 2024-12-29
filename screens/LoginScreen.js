@@ -52,6 +52,14 @@ const LoginScreen= ({navigation}) =>{
         buttonColor="gray"
         pressedButtonColor="lightgray"
       />
+      
+      <CustomButton
+        buttonText="Doktor Girişi"
+        setWidth="40%"
+        buttonColor="green"
+        pressedButtonColor="darkgreen"
+        handleOnPress={() => navigation.navigate('AdminLogin')}
+      />
     </View>
   );
 };
