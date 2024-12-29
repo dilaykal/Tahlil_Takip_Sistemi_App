@@ -1,8 +1,8 @@
 // screens/HomeScreen.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { collection, addDoc }  from 'firebase/firestore';
-import {db} from '../firebaseConfig';
+// import { collection, addDoc }  from 'firebase/firestore';
+// import {db} from '../firebaseConfig';
 
 const HomeScreen = () =>{
   return(

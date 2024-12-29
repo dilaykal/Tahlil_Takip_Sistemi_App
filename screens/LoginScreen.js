@@ -5,12 +5,12 @@ import { View, Text,StyleSheet, TextInput, Pressable } from 'react-native';
 import { CustomTextInput, CustomButton } from '../component';
 import { login } from '../redux/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import {setLogin } from '../redux/userSlice';
+//import {setLogin } from '../redux/userSlice';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
 // import RootNavigation from './navigation/rootNavigation';
-import { db } from './firebaseConfig';
- import { collection, getDocs } from 'firebase/firestore';
+// import { db } from './firebaseConfig';
+//  import { collection, getDocs } from 'firebase/firestore';
 // import { 
 //  HomeScreen,
 //  RegisterScreen,
@@ -23,8 +23,8 @@ const LoginScreen= ({navigation}) =>{
   const[email, setEmail] = useState('')
   const[password, setPassword] = useState('')
 
-  //userSlice içerisindeki verilerin okunması
-  //const {} = useSelector(state=> state.user)
+  // Redux state'inden error'u alalım
+  const { error } = useSelector((state) => state.user);
   //userSlice içerisindeki reducer yapılarını kullanma veya veri gönderme 
   const dispatch = useDispatch()
 
@@ -36,7 +36,7 @@ const LoginScreen= ({navigation}) =>{
       <CustomTextInput
         title="E-posta"
         isSecureText={false}
-        handleOnChangeText={(text)=>setEmail(text)}
+        handleOnChangeText={(text)=>setEmail(text.toLowerCase())}
         handleValue={email}
         handlePlaceholder='E Posta adresinizi Giriniz'
 
@@ -50,7 +50,7 @@ const LoginScreen= ({navigation}) =>{
         handlePlaceholder='Şifre Giriniz'
 
       />
-
+       {error && <Text style={styles.errorText}>{error}</Text>}
       <CustomButton
         buttonText='Giriş Yap'
         setWidth='80%'
