@@ -6,6 +6,8 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AdminLoginScreen from '../screens/AdminLoginScreen';
 import AdminDashboard from '../screens/AdminDashboard';
+import GuideManagement from '../screens/GuideManagement';
+import GuideSearch from '../screens/GuideSearch';
 
 const Stack = createStackNavigator();
 const AuthStack = () => {
@@ -18,13 +20,33 @@ const AuthStack = () => {
             <Stack.Screen name= "Register" component={RegisterScreen}></Stack.Screen>
             <Stack.Screen name= "AdminLogin" component={AdminLoginScreen}></Stack.Screen>
             <Stack.Screen 
-            name="AdminDashboard" 
-            component={AdminDashboard}
-            options={{ 
-              title: 'Doktor Paneli',
-              headerLeft: null 
+              name="AdminDashboard" 
+              component={AdminDashboard}
+              options={{ 
+                title: 'Doktor Paneli',
+                headerLeft: null 
+              }}
+            />
+            <Stack.Screen 
+              name="GuideManagement" 
+              component={GuideManagement}
+              options={{ 
+                title: 'Kılavuz Yönetimi',
+                //headerLeft: null 
+              }}
+            />
+            <Stack.Screen 
+            name="GuideSearch" 
+            component={GuideSearch}
+            options={{
+              title: 'Referans Değer Arama',
+              headerStyle: {
+                backgroundColor: 'tomato',
+              },
+              headerTintColor: '#fff',
             }}
           />
+            
 
         </Stack.Navigator>
     )

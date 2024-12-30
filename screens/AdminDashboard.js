@@ -52,6 +52,24 @@ const AdminDashboard = ({ route, navigation }) => {
         <Text style={styles.welcomeText}>Hoş Geldiniz, {doctorData.name}</Text>
         <Text style={styles.subtitleText}>Dahiliye</Text>
       </View>
+      {/* Yeni butonları buraya ekliyoruz */}
+      <View style={styles.menuButtons}>
+        <CustomButton
+          buttonText="Kılavuz Yönetimi"
+          setWidth="80%"
+          buttonColor="green"
+          pressedButtonColor="darkgreen"
+          handleOnPress={() => navigation.navigate('GuideManagement', { doctorData })}
+        />
+        
+        <CustomButton
+          buttonText="Referans Değer Ara"
+          setWidth="80%"
+          buttonColor="blue"
+          pressedButtonColor="darkblue"
+          handleOnPress={() => navigation.navigate('GuideSearch')}
+        />
+      </View>
 
       <CustomTextInput
         title="Hasta Ara"
@@ -143,6 +161,10 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 20,
     alignItems: 'center'
+  },menuButtons: {
+    marginBottom: 20,
+    alignItems: 'center',
+    gap: 10  // Butonlar arası boşluk
   }
 });
 
