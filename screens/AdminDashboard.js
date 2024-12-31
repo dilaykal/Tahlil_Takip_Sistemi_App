@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { collection, query, getDocs } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { CustomButton, CustomTextInput } from '../component';
+import { signOut } from 'firebase/auth'; // Firebase Auth'tan çıkış işlemi için gerekli fonksiyon
 
 const AdminDashboard = ({ route, navigation }) => {
   const [searchText, setSearchText] = useState('');
@@ -50,8 +51,19 @@ const AdminDashboard = ({ route, navigation }) => {
 
   // Hasta detaylarına git
   const handlePatientSelect = (patient) => {
-    console.log('Hasta bilgisi:', patient); // Hasta bilgilerini kontrol edin
+    console.log('Hasta bilgisi:', patient);
     navigation.navigate('PatientDetails', { patientName: patient.name });
+  };
+
+  // Çıkış işlemi
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth); // Firebase çıkış işlemi
+      console.log('Çıkış başarılı');
+      navigation.replace('Login'); // Login ekranına yönlendirme
+    } catch (error) {
+      console.error('Çıkış işlemi sırasında hata:', error);
+    }
   };
 
   return (
@@ -111,13 +123,14 @@ const AdminDashboard = ({ route, navigation }) => {
         ))}
       </ScrollView>
 
+      {/* Çıkış Butonu */}
       <View style={styles.footer}>
         <CustomButton
           buttonText="Çıkış Yap"
           setWidth="80%"
           buttonColor="red"
           pressedButtonColor="darkred"
-          handleOnPress={() => navigation.replace('Login')}
+          handleOnPress={handleSignOut} // Çıkış işlemi
         />
       </View>
     </View>
@@ -177,6 +190,8 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 20,
     alignItems: 'center',
+    justifyContent: 'center', // Butonun tam ortada olmasını sağlar
+    paddingBottom: 20, // Ekranın altına çok yakın olmaması için biraz boşluk ekler
   },
 });
 

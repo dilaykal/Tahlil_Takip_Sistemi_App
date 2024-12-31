@@ -7,7 +7,6 @@ import RegisterScreen from '../screens/RegisterScreen';
 import AdminLoginScreen from '../screens/AdminLoginScreen';
 import AdminDashboard from '../screens/AdminDashboard';
 import GuideManagement from '../screens/GuideManagement';
-import GuideSearch from '../screens/GuideSearch';
 import TahlilSorgulaScreen from '../screens/TahlilSorgulaScreen';
 import PatientDetails from '../screens/PatientDetails';
 import TestComparison from '../screens/TestComparison';
@@ -39,17 +38,7 @@ const AuthStack = () => {
                 //headerLeft: null 
               }}
             />
-            <Stack.Screen 
-            name="GuideSearch" 
-            component={GuideSearch}
-            options={{
-              title: 'Referans Değer Arama',
-              headerStyle: {
-                backgroundColor: 'tomato',
-              },
-              headerTintColor: '#fff',
-            }}
-          />
+            
           <Stack.Screen 
             name="TahlilSorgula" 
             component={TahlilSorgulaScreen}

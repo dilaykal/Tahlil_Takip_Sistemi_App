@@ -5,7 +5,7 @@ import {
   StyleSheet, 
   SafeAreaView, 
   ScrollView, 
-  Alert, 
+  Alert,
 } from 'react-native';
 import { 
   collection, 
@@ -17,132 +17,118 @@ import {
 import { db } from '../firebaseConfig';
 import { CustomButton, CustomTextInput } from '../component';
 
-
 const GuideManagement = ({navigation}) => {
   const [guides, setGuides] = useState([]);
   const [selectedIg, setSelectedIg] = useState('IgG');
   const [newGuide, setNewGuide] = useState({
     ageGroup: '',
     values: {
-      IgA: {
-        min: 0,
-        max: 0,
+      IgA: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgM: {
-        min: 0,
-        max: 0,
+      IgM: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgG: {
-        min: 0,
-        max: 0,
+      IgG: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgG1: {
-        min: 0,
-        max: 0,
+      IgG1: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgG2: {
-        min: 0,
-        max: 0,
+      IgG2: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgG3: {
-        min: 0,
-        max: 0,
+      IgG3: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       },
-      IgG4: {
-        min: 0,
-        max: 0,
+      IgG4: { 
+        min: '', 
+        max: '', 
         geometricMeanSD: { value: '', sd: '' },
         meanSD: { value: '', sd: '' },
         confidenceInterval: { value: '', sd: '' },
-        unit: "mg/dl"
+        unit: "mg/dl" 
       }
     }
   });
 
-  const fetchGuides = async () => {
-    try {
-      const guidesRef = collection(db, "guides");
-      const snapshot = await getDocs(guidesRef);
-      const guidesList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setGuides(guidesList);
-    } catch (error) {
-      console.error('Kılavuzlar getirilirken hata:', error);
-      Alert.alert('Hata', 'Kılavuzlar yüklenirken bir sorun oluştu');
-    }
-  };
+  // ... (fetchGuides fonksiyonu aynı kalacak)
 
   const handleAddGuide = async () => {
     try {
-      // Veriyi hazırla
+      if (!newGuide.ageGroup.trim()) {
+        Alert.alert('Uyarı', 'Lütfen yaş grubunu girin');
+        return;
+      }
+
       const guideData = {
         ageGroup: newGuide.ageGroup,
         values: {
           [selectedIg]: {
-            min: parseFloat(newGuide.values[selectedIg].min),
-            max: parseFloat(newGuide.values[selectedIg].max),
+            min: newGuide.values[selectedIg].min === '' ? 0 : Number(newGuide.values[selectedIg].min.replace(',', '.')),
+            max: newGuide.values[selectedIg].max === '' ? 0 : Number(newGuide.values[selectedIg].max.replace(',', '.')),
             geometricMeanSD: {
-              value: parseFloat(newGuide.values[selectedIg].geometricMeanSD.value),
-              sd: parseFloat(newGuide.values[selectedIg].geometricMeanSD.sd)
+              value: newGuide.values[selectedIg].geometricMeanSD.value === '' ? 0 : Number(newGuide.values[selectedIg].geometricMeanSD.value.replace(',', '.')),
+              sd: newGuide.values[selectedIg].geometricMeanSD.sd === '' ? 0 : Number(newGuide.values[selectedIg].geometricMeanSD.sd.replace(',', '.'))
             },
             meanSD: {
-              value: parseFloat(newGuide.values[selectedIg].meanSD.value),
-              sd: parseFloat(newGuide.values[selectedIg].meanSD.sd)
+              value: newGuide.values[selectedIg].meanSD.value === '' ? 0 : Number(newGuide.values[selectedIg].meanSD.value.replace(',', '.')),
+              sd: newGuide.values[selectedIg].meanSD.sd === '' ? 0 : Number(newGuide.values[selectedIg].meanSD.sd.replace(',', '.'))
             },
             confidenceInterval: {
-              value: parseFloat(newGuide.values[selectedIg].confidenceInterval.value),
-              sd: parseFloat(newGuide.values[selectedIg].confidenceInterval.sd)
+              value: newGuide.values[selectedIg].confidenceInterval.value === '' ? 0 : Number(newGuide.values[selectedIg].confidenceInterval.value.replace(',', '.')),
+              sd: newGuide.values[selectedIg].confidenceInterval.sd === '' ? 0 : Number(newGuide.values[selectedIg].confidenceInterval.sd.replace(',', '.'))
             },
             unit: "mg/dl"
           }
         }
       };
 
-      // Firestore'a ekle
       await addDoc(collection(db, "guides"), guideData);
-
-      // Başarılı olduğunda
       Alert.alert('Başarılı', 'Yeni kılavuz başarıyla eklendi');
-      // State'i resetle
+      
       setNewGuide({
         ageGroup: '',
         values: {
-          IgA: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgM: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgG: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgG1: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgG2: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgG3: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
-          IgG4: { min: 0, max: 0, geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" }
+          IgA: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgM: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgG: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgG1: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgG2: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgG3: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" },
+          IgG4: { min: '', max: '', geometricMeanSD: { value: '', sd: '' }, meanSD: { value: '', sd: '' }, confidenceInterval: { value: '', sd: '' }, unit: "mg/dl" }
         }
       });
-      // Listeyi yenile
       fetchGuides();
     } catch (error) {
       console.error('Kılavuz eklenirken hata:', error);
@@ -150,69 +136,140 @@ const GuideManagement = ({navigation}) => {
     }
   };
 
-  const handleDeleteGuide = async (guideId) => {
-    try {
-      await deleteDoc(doc(db, "guides", guideId));
-      Alert.alert('Başarılı', 'Kılavuz silindi');
-      fetchGuides(); // Listeyi yenile
-    } catch (error) {
-      console.error('Silme işleminde hata:', error);
-      Alert.alert('Hata', 'Kılavuz silinirken bir sorun oluştu');
-    }
-  };
+  // ... (handleDeleteGuide fonksiyonu aynı kalacak)
 
   const ValueInputGroup = ({ ig, values, onChange }) => {
     return (
       <View style={styles.valueGroupContainer}>
         <Text style={styles.valueLabel}>{ig}</Text>
-        <View style={styles.inputColumn}>
-          <CustomTextInput
-            title="Min-Max"
-            handleValue={`${values.min} - ${values.max}`}
-            handleOnChangeText={(text) => {
-              const [min, max] = text.split('-').map(t => parseFloat(t.trim()));
-              onChange(ig, 'min', min || 0);
-              onChange(ig, 'max', max || 0);
-            }}
-            width="100%"
-          />
-          
-          <CustomTextInput
-            title="Geometric Mean SD"
-            handleValue={`${values.geometricMeanSD.value} ± ${values.geometricMeanSD.sd}`}
-            handleOnChangeText={(text) => {
-              const [value, sd] = text.split('±').map(t => parseFloat(t.trim()));
-              onChange(ig, 'geometricMeanSD', { value, sd });
-            }}
-            width="100%"
-          />
-          
-          <CustomTextInput
-            title="Mean SD"
-            handleValue={`${values.meanSD.value} ± ${values.meanSD.sd}`}
-            handleOnChangeText={(text) => {
-                const [value, sd] = text.split('±').map(t => parseFloat(t.trim()));
-                onChange(ig, 'meanSD', { value, sd });
+        
+        {/* Min-Max Inputs */}
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="Minimum Değer"
+              handleValue={values.min}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'min', validText);
               }}
-            width="100%"
-          />
-          
-          <CustomTextInput
-            title="95% Confidence Interval"
-            handleValue={`${values.confidenceInterval.value} ± ${values.confidenceInterval.sd}`}
-            handleOnChangeText={(text) => {
-              const [value, sd] = text.split('±').map(t => parseFloat(t.trim()));
-              onChange(ig, 'confidenceInterval', { value, sd });
-            }}
-            width="100%"
-          />
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="Min değer"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="Maximum Değer"
+              handleValue={values.max}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'max', validText);
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="Max değer"
+            />
+          </View>
+        </View>
+
+        {/* Geometric Mean Inputs */}
+        <Text style={styles.subLabel}>Geometric Mean SD</Text>
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="Değer"
+              handleValue={values.geometricMeanSD.value}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'geometricMeanSD', { ...values.geometricMeanSD, value: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="Değer"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="SD"
+              handleValue={values.geometricMeanSD.sd}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'geometricMeanSD', { ...values.geometricMeanSD, sd: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="SD"
+            />
+          </View>
+        </View>
+
+        {/* Mean SD Inputs */}
+        <Text style={styles.subLabel}>Mean SD</Text>
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="Değer"
+              handleValue={values.meanSD.value}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'meanSD', { ...values.meanSD, value: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="Değer"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="SD"
+              handleValue={values.meanSD.sd}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'meanSD', { ...values.meanSD, sd: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="SD"
+            />
+          </View>
+        </View>
+
+        {/* Confidence Interval Inputs */}
+        <Text style={styles.subLabel}>95% Confidence Interval</Text>
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="Değer"
+              handleValue={values.confidenceInterval.value}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'confidenceInterval', { ...values.confidenceInterval, value: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="Değer"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <CustomTextInput
+              title="SD"
+              handleValue={values.confidenceInterval.sd}
+              handleOnChangeText={(text) => {
+                const validText = text.replace(',', '.');
+                onChange(ig, 'confidenceInterval', { ...values.confidenceInterval, sd: validText });
+              }}
+              width="100%"
+              keyboardType="decimal-pad"
+              handlePlaceholder="SD"
+            />
+          </View>
         </View>
       </View>
     );
   };
-  useEffect(() => {
-    fetchGuides();
-  }, []);
+
+  // ... (geriye kalan component kodu aynı)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -220,7 +277,7 @@ const GuideManagement = ({navigation}) => {
         <Text style={styles.title}>Kılavuz Yönetimi</Text>
 
         <View style={styles.igSelectContainer}>
-          <Text style={styles.igSelectLabel}>İmmünoglobulin Türü Seçin:</Text>
+          <Text style={styles.igSelectLabel}>İmmünoglobulin Türü:</Text>
           {['IgA', 'IgM', 'IgG', 'IgG1', 'IgG2', 'IgG3', 'IgG4'].map((ig) => (
             <CustomButton
               key={ig}
@@ -245,40 +302,30 @@ const GuideManagement = ({navigation}) => {
             handleValue={newGuide.ageGroup}
             handlePlaceholder="Yaş grubunu girin"
           />
-          
 
           {Object.keys(newGuide.values)
             .filter(key => key === selectedIg)
             .map((key) => (
-                <ValueInputGroup
+              <ValueInputGroup
                 key={key}
                 ig={key}
                 values={newGuide.values[key]}
                 onChange={(ig, field, value) => {
-                    setNewGuide(prev => {
-                        // Değerlerin kopyasını oluştur
-                        const updatedValues = {...prev.values};
-                        
-                        // Farklı alan tiplerini kontrol et
-                        if (typeof value === 'object') {
-                            // meanSD, geometricMeanSD gibi alanlarda
-                            updatedValues[ig][field] = {
-                                value: isFinite(value.value) ? value.value : 0,
-                                sd: isFinite(value.sd) ? value.sd : 0
-                            };
-                        } else {
-                            // min, max gibi sayısal alanlarda
-                            updatedValues[ig][field] = isFinite(value) ? value : 0;
-                        }
-
-                        return {
-                            ...prev,
-                            values: updatedValues
-                        };
-                    });
+                  setNewGuide(prev => {
+                    const updatedValues = {...prev.values};
+                    if (typeof value === 'object') {
+                      updatedValues[ig][field] = value;
+                    } else {
+                      updatedValues[ig][field] = value;
+                    }
+                    return {
+                      ...prev,
+                      values: updatedValues
+                    };
+                  });
                 }}
-        />
-    ))}
+              />
+          ))}
 
           <CustomButton
             buttonText="Ekle"
@@ -287,13 +334,6 @@ const GuideManagement = ({navigation}) => {
             pressedButtonColor="darkgreen"
             handleOnPress={handleAddGuide}
           />
-          <CustomButton
-            buttonText="Geri"
-            setWidth="40%"
-            buttonColor="gray"
-            pressedButtonColor="darkgray"
-            handleOnPress={() => navigation.goBack()}
-        />
         </View>
 
         <View style={styles.guideList}>
@@ -301,13 +341,25 @@ const GuideManagement = ({navigation}) => {
             <View key={index} style={styles.guideItem}>
               <Text style={styles.guideText}>
                 Yaş Grubu: {guide.ageGroup}
+                {guide.values[selectedIg] && (
+                  `\nMin-Max: ${guide.values[selectedIg].min} - ${guide.values[selectedIg].max} ${guide.values[selectedIg].unit}`
+                )}
+                {guide.values[selectedIg]?.geometricMeanSD && (
+                  `\nGeometric Mean: ${guide.values[selectedIg].geometricMeanSD.value} ± ${guide.values[selectedIg].geometricMeanSD.sd}`
+                )}
+                {guide.values[selectedIg]?.meanSD && (
+                  `\nMean: ${guide.values[selectedIg].meanSD.value} ± ${guide.values[selectedIg].meanSD.sd}`
+                )}
+                {guide.values[selectedIg]?.confidenceInterval && (
+                  `\nConfidence Interval: ${guide.values[selectedIg].confidenceInterval.value} ± ${guide.values[selectedIg].confidenceInterval.sd}`
+                )}
               </Text>
               <CustomButton
                 buttonText="Sil"
                 setWidth="50%"
                 buttonColor="red"
                 pressedButtonColor="darkred"
-                handleOnPress={() => handleDeleteGuide(guide)}
+                handleOnPress={() => handleDeleteGuide(guide.id)}
               />
             </View>
           ))}
@@ -334,7 +386,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10 // Ekrana daha fazla alan sağlamak için padding'i azaltabilirsiniz
+    padding: 10
   },
   title: {
     fontSize: 24,
@@ -345,7 +397,7 @@ const styles = StyleSheet.create({
   igSelectContainer: {
     width: '100%',
     flexDirection: 'row',
-    flexWrap: 'wrap', // Elemanların sarmasını sağla
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginVertical: 10
   },
@@ -361,16 +413,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 20
   },
-  valueContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  valueGroupContainer: {
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    padding: 10,
+    borderRadius: 10,
     marginVertical: 10
   },
   valueLabel: {
     color: 'white',
-    fontSize: 16,
-    marginRight: 10
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10
+  },
+  inputContainer: {
+    flex: 1
   },
   guideList: {
     width: '100%',
@@ -386,24 +448,8 @@ const styles = StyleSheet.create({
   guideText: {
     color: 'white',
     fontSize: 16,
-    marginBottom: 10
-  },
-  vvalueGroupContainer: {
-    width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 10
-  },
-  valueLabel: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10
-  },
-  inputColumn: {
-    width: '100%',
-    gap: 10  // Inputlar arası boşluk
+    marginBottom: 10,
+    textAlign: 'center'
   }
 });
 

@@ -15,7 +15,7 @@ const CustomTextInput = ({title,isSecureText,handleOnChangeText,handleValue,hand
                       ? 'email-address' 
                       : title === "Telefon" 
                         ? 'phone-pad' 
-                        : 'decimal-pad'
+                        : 'default'
                   }
                 onChangeText={(text) => handleOnChangeText(text)}
                 value={handleValue}

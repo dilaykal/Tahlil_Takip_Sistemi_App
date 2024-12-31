@@ -3,6 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';  // Direkt dosyadan import
 import ProfilePage from '../screens/ProfilePage';  // Direkt dosyadan import
 import RaporSorgulaScreen from '../screens/RaporSorgulaScreen';
+import LoginScreen from '../screens/LoginScreen';
+
 const Stack =createStackNavigator();
 const UserStack = () => {
     return (
@@ -23,6 +25,17 @@ const UserStack = () => {
             component={ProfilePage}
             options={{
               title: 'Profil',
+              headerStyle: {
+                backgroundColor: 'tomato',
+              },
+              headerTintColor: '#fff',
+            }}
+          />  
+          <Stack.Screen 
+            name="Login" 
+            component={LoginScreen}
+            options={{
+              title: 'Login',
               headerStyle: {
                 backgroundColor: 'tomato',
               },

@@ -17,7 +17,6 @@ const RaporSorgulaScreen = ({ navigation }) => {
   const [karsilastirmaSonuc, setKarsilastirmaSonuc] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Tahlilleri getir
   useEffect(() => {
     const tahlilleriGetir = async () => {
       try {
@@ -49,8 +48,14 @@ const RaporSorgulaScreen = ({ navigation }) => {
     try {
       if (!tarihString) return 'Tarih Yok';
 
-      const [tarih] = tarihString.split(' '); // Sadece tarih kısmını alalım
-      return tarih; // "18.07.2024" şeklinde döndürecek
+      // Tarih string'ini parçalara ayır
+      const [gun, ay, yil] = tarihString.split('.');
+      
+      // Geçerli bir tarih mi kontrol et
+      if (!gun || !ay || !yil) return 'Geçersiz Tarih';
+      
+      // Tarihi formatlı şekilde döndür
+      return `${gun.padStart(2, '0')}.${ay.padStart(2, '0')}.${yil}`;
     } catch (error) {
       console.error('Tarih formatlanırken hata:', error);
       return 'Geçersiz Tarih';
@@ -65,14 +70,20 @@ const RaporSorgulaScreen = ({ navigation }) => {
       if (secilenTahlil[igTipi]) {
         karsilastirmalar[igTipi] = [];
 
+        const secilenDeger = parseFloat(secilenTahlil[igTipi]);
+        
         tahliller
           .filter(t => t.id !== secilenTahlil.id && t[igTipi])
           .forEach(digerTahlil => {
-            const secilenDeger = parseFloat(secilenTahlil[igTipi]);
             const karsilastirilacakDeger = parseFloat(digerTahlil[igTipi]);
 
+            // Sayısal değerleri kontrol et
+            if (isNaN(secilenDeger) || isNaN(karsilastirilacakDeger)) {
+              return;
+            }
+
             let durum;
-            if (secilenDeger === karsilastirilacakDeger) {
+            if (Math.abs(secilenDeger - karsilastirilacakDeger) < 0.001) {
               durum = "NORMAL";
             } else if (secilenDeger > karsilastirilacakDeger) {
               durum = "YÜKSEK";
@@ -82,14 +93,24 @@ const RaporSorgulaScreen = ({ navigation }) => {
 
             karsilastirmalar[igTipi].push({
               raporTarih: digerTahlil.raporTarih,
-              karsilastirilacakDeger: karsilastirilacakDeger,
-              durum: durum
+              karsilastirilacakDeger,
+              durum
             });
           });
       }
     });
 
     setKarsilastirmaSonuc(karsilastirmalar);
+  };
+
+  const formatTarihForDisplay = (date) => {
+    try {
+      if (!date) return 'Tarih Yok';
+      return date.split(' ')[0]; // Sadece tarih kısmını al
+    } catch (error) {
+      console.error('Tarih gösterimi hatası:', error);
+      return 'Geçersiz Tarih';
+    }
   };
 
   return (
@@ -115,7 +136,7 @@ const RaporSorgulaScreen = ({ navigation }) => {
                 }}
               >
                 <Text style={styles.tahlilDate}>
-                  {new Date(tahlil.raporTarih).toLocaleDateString()}
+                  {formatTarihForDisplay(tahlil.raporTarih)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -131,7 +152,7 @@ const RaporSorgulaScreen = ({ navigation }) => {
                     {karsilastirmalar.map((k, index) => (
                       <View key={index} style={styles.karsilastirmaItem}>
                         <Text style={styles.karsilastirmaDate}>
-                          {formatTarih(k.raporTarih)} tarihli rapora göre 
+                          {formatTarihForDisplay(k.raporTarih)} tarihli rapora göre 
                           ({k.karsilastirilacakDeger}): 
                         </Text>
                         <Text style={[
