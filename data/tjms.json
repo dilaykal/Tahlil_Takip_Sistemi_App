@@ -1,7 +1,7 @@
 [
     {
         "IgA": [
-            {"min_age_months": 0, "max_age_months": 0.5, "min_val": 6.67, "max_val": 8.75},
+            {"min_age_months": 0, "max_age_months": 1, "min_val": 6.67, "max_val": 8.75},
             {"min_age_months": 1, "max_age_months": 3, "min_val": 6.67, "max_val": 24.6},
             {"min_age_months": 4, "max_age_months": 6, "min_val": 6.67, "max_val": 53},
             {"min_age_months": 7, "max_age_months": 12, "min_val": 6.68, "max_val": 114},
