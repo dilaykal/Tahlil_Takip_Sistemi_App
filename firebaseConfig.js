@@ -4,7 +4,7 @@ import {getAuth, initializeAuth, browserLocalPersistence, browserPopupRedirectRe
 import { initializeApp } from 'firebase/app';
 import { getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, doc,getDocs } from 'firebase/firestore';
 //import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -37,7 +37,17 @@ auth.onAuthStateChanged((user) => {
     console.log('Kullanıcı oturum açık değil');
   }
 });
-
+export async function getKilavuz(id) {
+  const docRef = doc(db, "kılavuzlar", id); // Kılavuz ID'si
+  const docSnap = await getDoc(docRef);
+  
+  if (docSnap.exists()) {
+    return docSnap.data(); // Kılavuz verilerini döndür
+  } else {
+    console.log("Kılavuz bulunamadı");
+    return null;
+  }
+}
 
 
 //const auth = getAuth(app);

@@ -8,6 +8,8 @@ import AdminLoginScreen from '../screens/AdminLoginScreen';
 import AdminDashboard from '../screens/AdminDashboard';
 import GuideManagement from '../screens/GuideManagement';
 import GuideSearch from '../screens/GuideSearch';
+import TahlilSorgulaScreen from '../screens/TahlilSorgulaScreen';
+
 
 const Stack = createStackNavigator();
 const AuthStack = () => {
@@ -46,6 +48,17 @@ const AuthStack = () => {
               headerTintColor: '#fff',
             }}
           />
+          <Stack.Screen 
+            name="TahlilSorgula" 
+            component={TahlilSorgulaScreen}
+            options={{
+              title: 'TahlilSorgula',
+              headerStyle: {
+                backgroundColor: 'tomato',
+              },
+              headerTintColor: '#fff',
+            }}
+          />       
             
 
         </Stack.Navigator>

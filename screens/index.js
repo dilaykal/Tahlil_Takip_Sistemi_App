@@ -6,3 +6,9 @@ export { default as ProfilePage } from './ProfilePage';
 export { default as AdminDashboard } from './AdminDashboard';
 export { default as GuideManagement } from './GuideManagement';
 export { default as GuideSearch } from './GuideSearch';
+export { default as TahlilSorgulaScreen } from './TahlilSorgulaScreen';
+export { default as RaporSorgulaScreen } from './RaporSorgulaScreen';
+
+
+
+

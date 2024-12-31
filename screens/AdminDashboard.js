@@ -61,7 +61,13 @@ const AdminDashboard = ({ route, navigation }) => {
           pressedButtonColor="darkgreen"
           handleOnPress={() => navigation.navigate('GuideManagement', { doctorData })}
         />
-        
+        <CustomButton
+          buttonText={"Tahlil Sorgula"}
+          setWidth={"40%"}
+          buttonColor={'blue'}
+          pressedButtonColor={'gray'}
+          handleOnPress={() => navigation.navigate('TahlilSorgula')}
+        />
         <CustomButton
           buttonText="Referans Değer Ara"
           setWidth="80%"
@@ -70,6 +76,7 @@ const AdminDashboard = ({ route, navigation }) => {
           handleOnPress={() => navigation.navigate('GuideSearch')}
         />
       </View>
+
 
       <CustomTextInput
         title="Hasta Ara"
