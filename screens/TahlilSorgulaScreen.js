@@ -13,6 +13,7 @@ import tjmsData from '../data/tjms.json';
 import tjpData from '../data/tjp.json';
 import apData from '../data/ap.json';     
 import cilvData from '../data/cilv.json';
+import osData from '../data/os.json';
 import CustomButton from '../component/CustomButton';
 
 import { collection, query, getDocs, where } from 'firebase/firestore';
@@ -48,7 +49,8 @@ const TahlilSorgulaScreen = ({navigation}) => {
         { name: 'TJMS', data: tjmsData },
         { name: 'TJP', data: tjpData },
         { name: 'AP', data: apData },   
-        { name: 'CILV', data: cilvData }  
+        { name: 'CILV', data: cilvData },
+        { name: 'OS', data: osData },  
       ];
       
       let sonuclar = [];

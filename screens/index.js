@@ -8,6 +8,10 @@ export { default as GuideManagement } from './GuideManagement';
 export { default as GuideSearch } from './GuideSearch';
 export { default as TahlilSorgulaScreen } from './TahlilSorgulaScreen';
 export { default as RaporSorgulaScreen } from './RaporSorgulaScreen';
+export { default as PatientDetails } from './PatientDetails';
+export { default as TestComparison } from './TestComparison';
+
+
 
 
 

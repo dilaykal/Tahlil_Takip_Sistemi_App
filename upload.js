@@ -6,10 +6,10 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-const data = require('./data/tjms.json'); // Yukarıdaki JSON dosyanız
+const data = require('./data/os.json'); // Yukarıdaki JSON dosyanız
 
 async function uploadData() {
-  const immunoglobulinsCollection = db.collection('Kılavuz-tjms');
+  const immunoglobulinsCollection = db.collection('Kılavuz-os');
 
   for (const [key, value] of Object.entries(data[0])) { // Her immünoglobulin tipi için döngü
     const docRef = immunoglobulinsCollection.doc(key);

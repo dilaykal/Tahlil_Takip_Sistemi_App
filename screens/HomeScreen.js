@@ -13,18 +13,6 @@ const HomeScreen = () =>{
   const [data, setData]=useState([])
   const [selectedTahlil, setSelectedTahlil] = useState(null);
 
-  //SEND DATA TO FIREBASE
-  const sendData = async()=>{
-      try{
-        const docRef=await addDoc(collection(db,"TahlilTakipSistemi"),{
-          title:"Tahlil Sonuc Takip Sistemi",
-          content:"Tahlil sonuclari görüntüleme"
-      });
-      console.log("Document written with ID: ", docRef.id);
-    }catch (e){
-      console.error("Error adding document: ",e);
-    }
-  };
 // GET DATA FROM FIREBASE
 const getData = async () => {
   try {
@@ -60,22 +48,7 @@ const getData = async () => {
 };
 
 
-  //DELETE DATA FROM FIREBASE
-  const deleteData = async() =>{
-    await deleteDoc(doc(db, "TahlilTakipSistemi","kFQkmvoloVkzw70WsWGo"));
-  }
-
-  //UPDATE DATA FROM FIREBASE
-  const updateData=async()=>{
-    try{
-      const contentData=doc(db,"TahlilTakipSistemi","QC1vfbCkRgSf1yPHFqH9");
-      await updateDoc(contentData,{
-        content: "degişti"
-      });
-    }catch (error){
-      console.log(error)
-    }
-  }
+  
   const handleTahlilPress = (tahlil) => {
     setSelectedTahlil(tahlil === selectedTahlil ? null : tahlil); // Aynı tahlile tıklanırsa kapatılır
   };
@@ -151,13 +124,7 @@ const getData = async () => {
           <Text style={styles.noDataText}>Henüz test sonucu bulunmamaktadır</Text>
         )}
     
-        <CustomButton
-          buttonText={"Save"}
-          setWidth={"40%"}
-          buttonColor={'blue'}
-          pressedButtonColor={'gray'}
-          handleOnPress={sendData}
-        />
+        
         <CustomButton
           buttonText={"Tahlilleri Görüntüle"}
           setWidth={"40%"}
@@ -173,21 +140,7 @@ const getData = async () => {
           pressedButtonColor="gray"
           handleOnPress={() => navigation.navigate('RaporSorgula')}
         />
-        <CustomButton
-          buttonText={"Delete Data"}
-          setWidth={"40%"}
-          buttonColor={'blue'}
-          pressedButtonColor={'gray'}
-          handleOnPress={deleteData}
-        />
-        <CustomButton
-          buttonText={"Update Data"}
-          setWidth={"40%"}
-          buttonColor={'blue'}
-          pressedButtonColor={'gray'}
-          handleOnPress={updateData}
-        />
-      
+        
         <CustomButton
           buttonText="Profil"
           setWidth="40%"

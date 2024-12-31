@@ -9,8 +9,9 @@ import {
 } from 'react-native';
 import { collection, query, getDocs, orderBy, doc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
+import CustomButton from '../component/CustomButton';
 
-const RaporSorgulaScreen = ({navigation}) => {
+const RaporSorgulaScreen = ({ navigation }) => {
   const [tahliller, setTahliller] = useState([]);
   const [secilenTahlil, setSecilenTahlil] = useState(null);
   const [karsilastirmaSonuc, setKarsilastirmaSonuc] = useState(null);
@@ -43,11 +44,11 @@ const RaporSorgulaScreen = ({navigation}) => {
 
     tahlilleriGetir();
   }, []);
+
   const formatTarih = (tarihString) => {
     try {
       if (!tarihString) return 'Tarih Yok';
-      
-      // "18.07.2024 17:02:42" formatındaki stringi parçalayalım
+
       const [tarih] = tarihString.split(' '); // Sadece tarih kısmını alalım
       return tarih; // "18.07.2024" şeklinde döndürecek
     } catch (error) {
@@ -55,20 +56,21 @@ const RaporSorgulaScreen = ({navigation}) => {
       return 'Geçersiz Tarih';
     }
   };
+
   const karsilastirIgDegerleri = (secilenTahlil) => {
     const igTipleri = ['IgG1', 'IgG2', 'IgG3', 'IgG4', 'IgA', 'IgM', 'IgG'];
     const karsilastirmalar = {};
-  
+
     igTipleri.forEach(igTipi => {
       if (secilenTahlil[igTipi]) {
         karsilastirmalar[igTipi] = [];
-        
+
         tahliller
           .filter(t => t.id !== secilenTahlil.id && t[igTipi])
           .forEach(digerTahlil => {
             const secilenDeger = parseFloat(secilenTahlil[igTipi]);
             const karsilastirilacakDeger = parseFloat(digerTahlil[igTipi]);
-            
+
             let durum;
             if (secilenDeger === karsilastirilacakDeger) {
               durum = "NORMAL";
@@ -77,7 +79,7 @@ const RaporSorgulaScreen = ({navigation}) => {
             } else {
               durum = "DÜŞÜK";
             }
-  
+
             karsilastirmalar[igTipi].push({
               raporTarih: digerTahlil.raporTarih,
               karsilastirilacakDeger: karsilastirilacakDeger,
@@ -86,7 +88,7 @@ const RaporSorgulaScreen = ({navigation}) => {
           });
       }
     });
-  
+
     setKarsilastirmaSonuc(karsilastirmalar);
   };
 
@@ -121,29 +123,31 @@ const RaporSorgulaScreen = ({navigation}) => {
 
           {karsilastirmaSonuc && (
             <View style={styles.sonucContainer}>
-            <Text style={styles.sonucTitle}>Karşılaştırma Sonuçları</Text>
-            {Object.entries(karsilastirmaSonuc).map(([igTipi, karsilastirmalar]) => (
-              <View key={igTipi} style={styles.sonucItem}>
-                <Text style={styles.igTipi}>{igTipi}: {secilenTahlil[igTipi]}</Text>
-                {karsilastirmalar.map((k, index) => (
-                  <View key={index} style={styles.karsilastirmaItem}>
-                    <Text style={styles.karsilastirmaDate}>
-                      {formatTarih(k.raporTarih)} tarihli rapora göre 
-                      ({k.karsilastirilacakDeger}): 
-                    </Text>
-                    <Text style={[
-                      styles.durumText,
-                      k.durum === 'NORMAL' ? styles.normalDurum :
-                      k.durum === 'DÜŞÜK' ? styles.dusukDurum :
-                      styles.yuksekDurum
-                    ]}>
-                      {k.durum}
-                    </Text>
+              <Text style={styles.sonucTitle}>Karşılaştırma Sonuçları</Text>
+              <ScrollView style={styles.sonucScroll} nestedScrollEnabled={true}>
+                {Object.entries(karsilastirmaSonuc).map(([igTipi, karsilastirmalar]) => (
+                  <View key={igTipi} style={styles.sonucItem}>
+                    <Text style={styles.igTipi}>{igTipi}: {secilenTahlil[igTipi]}</Text>
+                    {karsilastirmalar.map((k, index) => (
+                      <View key={index} style={styles.karsilastirmaItem}>
+                        <Text style={styles.karsilastirmaDate}>
+                          {formatTarih(k.raporTarih)} tarihli rapora göre 
+                          ({k.karsilastirilacakDeger}): 
+                        </Text>
+                        <Text style={[
+                          styles.durumText,
+                          k.durum === 'NORMAL' ? styles.normalDurum :
+                          k.durum === 'DÜŞÜK' ? styles.dusukDurum :
+                          styles.yuksekDurum
+                        ]}>
+                          {k.durum}
+                        </Text>
+                      </View>
+                    ))}
                   </View>
                 ))}
-              </View>
-            ))}
-          </View>
+              </ScrollView>
+            </View>
           )}
           <CustomButton
             buttonText="Geri"
@@ -151,9 +155,8 @@ const RaporSorgulaScreen = ({navigation}) => {
             buttonColor="gray"
             pressedButtonColor="darkgray"
             handleOnPress={() => navigation.goBack()}
-            />
+          />
         </>
-        
       )}
     </ScrollView>
   );
@@ -195,6 +198,11 @@ const styles = StyleSheet.create({
   sonucContainer: {
     padding: 10,
   },
+  sonucScroll: {
+    maxHeight: 300,
+    paddingHorizontal: 5,
+    marginTop: 10,
+  },
   sonucTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -211,11 +219,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-  },
-  secilenDeger: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 10,
   },
   karsilastirmaItem: {
     marginVertical: 5,

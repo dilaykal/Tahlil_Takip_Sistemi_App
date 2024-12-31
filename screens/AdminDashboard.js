@@ -1,4 +1,3 @@
-// screens/AdminDashboard.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { collection, query, getDocs } from 'firebase/firestore';
@@ -15,35 +14,44 @@ const AdminDashboard = ({ route, navigation }) => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const usersRef = collection(db, "users");
+        const usersRef = collection(db, 'users');
         const querySnapshot = await getDocs(usersRef);
-        const patientList = [];
-        querySnapshot.forEach((doc) => {
-          patientList.push({ id: doc.id, ...doc.data() });
-        });
+        const patientList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setPatients(patientList);
         setFilteredPatients(patientList);
       } catch (error) {
-        console.error("Hasta verisi çekerken hata:", error);
+        console.error('Hasta verisi çekerken hata:', error);
       }
     };
 
     fetchPatients();
   }, []);
 
-  // Arama fonksiyonu
+  // Arama işlemi
   const handleSearch = (text) => {
     setSearchText(text);
-    const filtered = patients.filter(patient =>
-      patient.name?.toLowerCase().includes(text.toLowerCase()) ||
-      patient.tcNo?.includes(text)
+
+    if (text.trim() === '') {
+      setFilteredPatients(patients);
+      return;
+    }
+
+    const filtered = patients.filter(
+      (patient) =>
+        (patient.name && patient.name.toLowerCase().includes(text.toLowerCase())) ||
+        (patient.tcNo && patient.tcNo.toLowerCase().includes(text.toLowerCase()))
     );
+
     setFilteredPatients(filtered);
   };
 
   // Hasta detaylarına git
   const handlePatientSelect = (patient) => {
-    navigation.navigate('PatientDetails', { patient });
+    console.log('Hasta bilgisi:', patient); // Hasta bilgilerini kontrol edin
+    navigation.navigate('PatientDetails', { patientName: patient.name });
   };
 
   return (
@@ -52,7 +60,8 @@ const AdminDashboard = ({ route, navigation }) => {
         <Text style={styles.welcomeText}>Hoş Geldiniz, {doctorData.name}</Text>
         <Text style={styles.subtitleText}>Dahiliye</Text>
       </View>
-      {/* Yeni butonları buraya ekliyoruz */}
+
+      {/* Menü Butonları */}
       <View style={styles.menuButtons}>
         <CustomButton
           buttonText="Kılavuz Yönetimi"
@@ -62,22 +71,16 @@ const AdminDashboard = ({ route, navigation }) => {
           handleOnPress={() => navigation.navigate('GuideManagement', { doctorData })}
         />
         <CustomButton
-          buttonText={"Tahlil Sorgula"}
-          setWidth={"40%"}
-          buttonColor={'blue'}
-          pressedButtonColor={'gray'}
+          buttonText="Tahlil Sorgula"
+          setWidth="40%"
+          buttonColor="blue"
+          pressedButtonColor="gray"
           handleOnPress={() => navigation.navigate('TahlilSorgula')}
         />
-        <CustomButton
-          buttonText="Referans Değer Ara"
-          setWidth="80%"
-          buttonColor="blue"
-          pressedButtonColor="darkblue"
-          handleOnPress={() => navigation.navigate('GuideSearch')}
-        />
+        <CustomButton buttonText="Referans Değer Ara" setWidth="80%" />
       </View>
 
-
+      {/* Hasta Ara */}
       <CustomTextInput
         title="Hasta Ara"
         isSecureText={false}
@@ -86,12 +89,13 @@ const AdminDashboard = ({ route, navigation }) => {
         handlePlaceholder="İsim veya TC No ile ara"
       />
 
+      {/* Hasta Listesi */}
       <ScrollView style={styles.patientList}>
         {filteredPatients.map((patient) => (
           <View key={patient.id} style={styles.patientCard}>
             <View style={styles.patientInfo}>
-              <Text style={styles.patientName}>{patient.name}</Text>
-              <Text style={styles.patientDetail}>TC: {patient.tcNo}</Text>
+              <Text style={styles.patientName}>{patient.name || 'Bilinmiyor'}</Text>
+              <Text style={styles.patientDetail}>TC: {patient.tcNo || 'Belirtilmemiş'}</Text>
               <Text style={styles.patientDetail}>
                 Tel: {patient.phoneNumber || 'Belirtilmemiş'}
               </Text>
@@ -124,25 +128,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'tomato',
-    padding: 20
+    padding: 20,
   },
   header: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 5
+    marginBottom: 5,
   },
   subtitleText: {
     fontSize: 18,
     color: 'white',
-    opacity: 0.8
+    opacity: 0.8,
+  },
+  menuButtons: {
+    marginBottom: 20,
+    alignItems: 'center',
+    gap: 10, // Butonlar arası boşluk
   },
   patientList: {
     flex: 1,
-    marginVertical: 20
+    marginVertical: 20,
   },
   patientCard: {
     backgroundColor: 'white',
@@ -151,28 +160,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   patientInfo: {
-    flex: 1
+    flex: 1,
   },
   patientName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginBottom: 5,
   },
   patientDetail: {
     fontSize: 14,
-    color: 'gray'
+    color: 'gray',
   },
   footer: {
     marginTop: 20,
-    alignItems: 'center'
-  },menuButtons: {
-    marginBottom: 20,
     alignItems: 'center',
-    gap: 10  // Butonlar arası boşluk
-  }
+  },
 });
 
 export default AdminDashboard;

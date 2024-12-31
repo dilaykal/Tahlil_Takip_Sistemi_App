@@ -9,6 +9,8 @@ import AdminDashboard from '../screens/AdminDashboard';
 import GuideManagement from '../screens/GuideManagement';
 import GuideSearch from '../screens/GuideSearch';
 import TahlilSorgulaScreen from '../screens/TahlilSorgulaScreen';
+import PatientDetails from '../screens/PatientDetails';
+import TestComparison from '../screens/TestComparison';
 
 
 const Stack = createStackNavigator();
@@ -58,7 +60,29 @@ const AuthStack = () => {
               },
               headerTintColor: '#fff',
             }}
-          />       
+          />   
+          <Stack.Screen 
+            name="PatientDetails" 
+            component={PatientDetails}
+            options={{
+              title: 'PatientDetails',
+              headerStyle: {
+                backgroundColor: 'tomato',
+              },
+              headerTintColor: '#fff',
+            }}
+          />          
+          <Stack.Screen 
+            name="TestComparison" 
+            component={TestComparison}
+            options={{
+              title: 'TestComparison',
+              headerStyle: {
+                backgroundColor: 'tomato',
+              },
+              headerTintColor: '#fff',
+            }}
+          />           
             
 
         </Stack.Navigator>

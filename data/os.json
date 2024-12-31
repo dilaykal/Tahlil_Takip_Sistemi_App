@@ -1,0 +1,38 @@
+[
+    {
+        "IgA": [
+            {"min_age_months": 1, "max_age_months": 3, "min_val": 6, "max_val": 47},
+            {"min_age_months": 3, "max_age_months": 6, "min_val": 7, "max_val": 63},
+            {"min_age_months": 6, "max_age_months": 12, "min_val": 12, "max_val": 114},
+            {"min_age_months": 12, "max_age_months": 24, "min_val": 15, "max_val": 52},
+            {"min_age_months": 24, "max_age_months": 36, "min_val": 24, "max_val": 84},
+            {"min_age_months": 36, "max_age_months": 60, "min_val": 55, "max_val": 135},
+            {"min_age_months": 60, "max_age_months": 96, "min_val": 81, "max_val": 264},
+            {"min_age_months": 96, "max_age_months": 132, "min_val": 78, "max_val": 334},
+            {"min_age_months": 132, "max_age_months": 192, "min_val": 87, "max_val": 234}
+            
+        ],
+        "IgM": [
+            {"min_age_months": 1, "max_age_months": 3, "min_val": 18, "max_val": 87},
+            {"min_age_months": 3, "max_age_months": 6, "min_val": 18, "max_val": 136},
+            {"min_age_months": 6, "max_age_months": 12, "min_val": 28, "max_val": 115},
+            {"min_age_months": 12, "max_age_months": 24, "min_val": 32, "max_val": 148},
+            {"min_age_months": 24, "max_age_months": 36, "min_val": 47, "max_val": 144},
+            {"min_age_months": 36, "max_age_months": 60, "min_val": 65, "max_val": 205},
+            {"min_age_months": 60, "max_age_months": 96, "min_val": 47, "max_val": 198},
+            {"min_age_months": 96, "max_age_months": 132, "min_val": 28, "max_val": 163},
+            {"min_age_months": 132, "max_age_months": 192, "min_val": 47, "max_val": 285}
+        ],
+        "IgG": [
+            {"min_age_months": 1, "max_age_months": 3, "min_val": 227, "max_val": 770},
+            {"min_age_months": 3, "max_age_months": 6, "min_val": 141, "max_val": 885},
+            {"min_age_months": 6, "max_age_months": 12, "min_val": 350, "max_val": 1010},
+            {"min_age_months": 12, "max_age_months": 24, "min_val": 432, "max_val": 990},
+            {"min_age_months": 24, "max_age_months": 36, "min_val": 437, "max_val": 1320},
+            {"min_age_months": 36, "max_age_months": 60, "min_val": 524, "max_val": 1400},
+            {"min_age_months": 60, "max_age_months": 96, "min_val": 858, "max_val": 1600},
+            {"min_age_months": 96, "max_age_months": 132, "min_val": 645, "max_val": 1520},
+            {"min_age_months": 132, "max_age_months": 192, "min_val": 877, "max_val": 1620}
+        ]
+    }
+]
