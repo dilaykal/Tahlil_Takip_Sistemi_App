@@ -82,7 +82,20 @@ const GuideManagement = ({navigation}) => {
     }
   });
 
-  // ... (fetchGuides fonksiyonu aynı kalacak)
+  const fetchGuides = async () => {
+    try {
+      const guidesRef = collection(db, "guides");
+      const snapshot = await getDocs(guidesRef);
+      const guidesList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setGuides(guidesList);
+    } catch (error) {
+      console.error('Kılavuzlar getirilirken hata:', error);
+      Alert.alert('Hata', 'Kılavuzlar yüklenirken bir sorun oluştu');
+    }
+  };
 
   const handleAddGuide = async () => {
     try {
@@ -136,7 +149,16 @@ const GuideManagement = ({navigation}) => {
     }
   };
 
-  // ... (handleDeleteGuide fonksiyonu aynı kalacak)
+  const handleDeleteGuide = async (guideId) => {
+    try {
+      await deleteDoc(doc(db, "guides", guideId));
+      Alert.alert('Başarılı', 'Kılavuz silindi');
+      fetchGuides(); // Listeyi yenile
+    } catch (error) {
+      console.error('Silme işleminde hata:', error);
+      Alert.alert('Hata', 'Kılavuz silinirken bir sorun oluştu');
+    }
+  };
 
   const ValueInputGroup = ({ ig, values, onChange }) => {
     return (
@@ -269,7 +291,9 @@ const GuideManagement = ({navigation}) => {
     );
   };
 
-  // ... (geriye kalan component kodu aynı)
+  useEffect(() => {
+    fetchGuides();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

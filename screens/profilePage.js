@@ -108,7 +108,7 @@ const ProfilePage = () => {
         <CustomTextInput
           title="İsim Soyisim"
           isSecureText={false}
-          handleOnChangeText={setName}
+          handleOnChangeText={(text) => setName(text)}
           handleValue={name}
           handlePlaceholder=""
         />
@@ -132,7 +132,7 @@ const ProfilePage = () => {
         <CustomTextInput
           title="Cinsiyet"
           isSecureText={false}
-          handleOnChangeText={setGender}
+          handleOnChangeText={(text) => setGender(text)}
           handleValue={gender}
           handlePlaceholder=""
         />
@@ -140,7 +140,7 @@ const ProfilePage = () => {
         <CustomTextInput
           title="Doğum Tarihi"
           isSecureText={false}
-          handleOnChangeText={setBirthDate}
+          handleOnChangeText={(text) => setBirthDate(text)}
           handleValue={birthDate}
           handlePlaceholder="GG/AA/YYYY"
         />
@@ -188,9 +188,8 @@ const styles = StyleSheet.create({
   textInputContainer:{
     flex:5,
     width:'100%',
-    alignItems:'center',
     paddingVertical:5,
     alignItems:'center',
     justifyContent:'space-evenly'
   },
-})
+});
